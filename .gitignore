@@ -1,0 +1,43 @@
+# Build output
+build/
+dist/
+*.app/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+venv/
+venv_*/
+.Python
+
+# PyInstaller
+*.spec.bak
+
+# Icon generation
+*.iconset/
+
+# Distribution packages
+*.zip
+*.dmg
+
+# macOS
+.DS_Store
+*.swp
+*.swo
+
+# Logs
+*.log
+LOGS_*/
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Temporary files
+*.tmp
+*.bak
+*~
