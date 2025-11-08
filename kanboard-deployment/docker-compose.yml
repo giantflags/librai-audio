@@ -1,0 +1,194 @@
+version: '3.8'
+
+# ==============================================================================
+# Kanboard Docker Compose Configuration
+# ==============================================================================
+#
+# QUICK START:
+# 1. Copy .env.example to .env and configure
+# 2. Copy config.php.template to config.php and configure
+# 3. Run: docker-compose up -d
+#
+# ==============================================================================
+
+services:
+  kanboard:
+    image: kanboard/kanboard:latest
+    container_name: kanboard
+    ports:
+      - "8080:80"
+      # Uncomment for direct HTTPS (if not using reverse proxy):
+      # - "443:443"
+    volumes:
+      # Persistent data storage
+      - kanboard_data:/var/www/app/data
+      - kanboard_plugins:/var/www/app/plugins
+
+      # Mount custom configuration (REQUIRED for OAuth fix)
+      # Make sure config.php exists before starting
+      - ./config.php:/var/www/app/config.php:ro
+
+      # Optional: Custom CSS/themes
+      # - ./assets:/var/www/app/assets/css/custom:ro
+
+      # Optional: SSL certificates (if handling SSL in container)
+      # - ./ssl:/etc/nginx/ssl:ro
+
+    environment:
+      # Timezone
+      - TZ=${TZ:-UTC}
+
+      # Optional: Database configuration via environment variables
+      # These can be used instead of config.php settings
+      # - DATABASE_URL=mysql://user:pass@db:3306/kanboard
+      # - DATABASE_URL=postgres://user:pass@db:5432/kanboard
+
+    restart: unless-stopped
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    networks:
+      - kanboard_network
+
+    # Resource limits (adjust based on your needs)
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '1.0'
+    #       memory: 512M
+    #     reservations:
+    #       cpus: '0.5'
+    #       memory: 256M
+
+  # ==============================================================================
+  # Optional: MySQL Database
+  # ==============================================================================
+  # Uncomment this section if you want to use MySQL instead of SQLite
+  # Also update config.php with MySQL connection details
+  #
+  # db:
+  #   image: mysql:8.0
+  #   container_name: kanboard_mysql
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-changeme}
+  #     - MYSQL_DATABASE=${DB_NAME:-kanboard}
+  #     - MYSQL_USER=${DB_USERNAME:-kanboard}
+  #     - MYSQL_PASSWORD=${DB_PASSWORD:-kanboard}
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   restart: unless-stopped
+  #   networks:
+  #     - kanboard_network
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 3
+
+  # ==============================================================================
+  # Optional: PostgreSQL Database
+  # ==============================================================================
+  # Uncomment this section if you want to use PostgreSQL instead of SQLite
+  # Also update config.php with PostgreSQL connection details
+  #
+  # db:
+  #   image: postgres:15-alpine
+  #   container_name: kanboard_postgres
+  #   environment:
+  #     - POSTGRES_DB=${DB_NAME:-kanboard}
+  #     - POSTGRES_USER=${DB_USERNAME:-kanboard}
+  #     - POSTGRES_PASSWORD=${DB_PASSWORD:-kanboard}
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   restart: unless-stopped
+  #   networks:
+  #     - kanboard_network
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U kanboard"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 3
+
+  # ==============================================================================
+  # Optional: Nginx Reverse Proxy (if running in Docker)
+  # ==============================================================================
+  # Uncomment if you want Nginx in the same Docker network
+  # Otherwise, use system Nginx (see nginx.conf in this repo)
+  #
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: kanboard_nginx
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./ssl:/etc/nginx/ssl:ro
+  #   depends_on:
+  #     - kanboard
+  #   restart: unless-stopped
+  #   networks:
+  #     - kanboard_network
+
+# ==============================================================================
+# Volumes
+# ==============================================================================
+volumes:
+  # Kanboard data (SQLite database, uploaded files, etc.)
+  kanboard_data:
+    driver: local
+
+  # Kanboard plugins
+  kanboard_plugins:
+    driver: local
+
+  # MySQL data (if using MySQL)
+  # mysql_data:
+  #   driver: local
+
+  # PostgreSQL data (if using PostgreSQL)
+  # postgres_data:
+  #   driver: local
+
+# ==============================================================================
+# Networks
+# ==============================================================================
+networks:
+  kanboard_network:
+    driver: bridge
+
+# ==============================================================================
+# USAGE NOTES
+# ==============================================================================
+#
+# Commands:
+#   Start:    docker-compose up -d
+#   Stop:     docker-compose down
+#   Logs:     docker-compose logs -f kanboard
+#   Restart:  docker-compose restart kanboard
+#   Update:   docker-compose pull && docker-compose up -d
+#
+# Backup:
+#   docker run --rm --volumes-from kanboard \
+#     -v $(pwd):/backup \
+#     alpine tar -czf /backup/kanboard-backup-$(date +%F).tar.gz \
+#     /var/www/app/data
+#
+# Restore:
+#   docker run --rm --volumes-from kanboard \
+#     -v $(pwd):/backup \
+#     alpine tar -xzf /backup/kanboard-backup-YYYY-MM-DD.tar.gz -C /
+#
+# Access Shell:
+#   docker exec -it kanboard /bin/bash
+#
+# View Config:
+#   docker exec kanboard cat /var/www/app/config.php
+#
+# ==============================================================================

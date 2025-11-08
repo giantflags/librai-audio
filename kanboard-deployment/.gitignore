@@ -1,0 +1,64 @@
+# ============================================================================
+# SECURITY: Never commit files with secrets or credentials
+# ============================================================================
+
+# Environment files with secrets
+.env
+.env.local
+.env.production
+
+# Kanboard config with OAuth secrets
+config.php
+
+# SSL certificates and keys
+*.key
+*.pem
+*.crt
+*.cert
+ssl/
+certs/
+
+# Credentials and tokens
+credentials.json
+secrets.json
+*.token
+
+# Backup files that might contain data
+*.sql
+*.dump
+backup/
+backups/
+
+# ============================================================================
+# Development & IDE
+# ============================================================================
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# ============================================================================
+# Docker
+# ============================================================================
+
+# Docker volumes (data stored locally)
+data/
+volumes/
+
+# ============================================================================
+# ALLOW these template files (override the ignores above)
+# ============================================================================
+
+# These are safe - they contain no secrets
+!.env.example
+!config.php.template
+!README.md
+!docs/

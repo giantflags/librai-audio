@@ -1,0 +1,211 @@
+<?php
+
+/*
+ * Kanboard Custom Configuration Template
+ *
+ * SETUP INSTRUCTIONS:
+ * 1. Copy this file: cp config.php.template config.php
+ * 2. Edit config.php and replace placeholders with actual values
+ * 3. Mount as volume in Docker: ./config.php:/var/www/app/config.php:ro
+ *
+ * SECURITY WARNING:
+ * - NEVER commit config.php (contains OAuth secrets)
+ * - config.php is in .gitignore for your protection
+ * - Only commit this template file
+ *
+ * This file overrides default settings in /var/www/app/app/constants.php
+ */
+
+// ==============================================================================
+// CRITICAL: Application URL Configuration
+// ==============================================================================
+//
+// This is THE KEY SETTING that fixes the OAuth redirect_uri_mismatch error!
+//
+// Set this to your public domain URL where Kanboard is accessible.
+// Without this, Kanboard defaults to 'localhost' which breaks OAuth.
+//
+// Examples:
+//   - Production with domain: 'https://tasks.yourcompany.com'
+//   - Development: 'http://localhost:8080'
+//   - VM with public IP: 'http://your-vm-ip'
+//
+
+defined('APPLICATION_URL') or define('APPLICATION_URL', 'REPLACE_WITH_YOUR_DOMAIN');
+
+// Example: defined('APPLICATION_URL') or define('APPLICATION_URL', 'http://tasks.verslib.re');
+// Example: defined('APPLICATION_URL') or define('APPLICATION_URL', 'https://kanboard.example.com');
+
+// ==============================================================================
+// Reverse Proxy Configuration
+// ==============================================================================
+
+// Trust X-Forwarded-* headers from reverse proxy
+// Required if using Nginx/Apache reverse proxy with HTTPS termination
+defined('REVERSE_PROXY_TRUST_HEADER') or define('REVERSE_PROXY_TRUST_HEADER', true);
+
+// ==============================================================================
+// Google OAuth Configuration
+// ==============================================================================
+
+// Enable Google OAuth authentication
+defined('GOOGLE_AUTH') or define('GOOGLE_AUTH', true);
+
+// Google OAuth Client ID
+// Get from: https://console.cloud.google.com/apis/credentials
+defined('GOOGLE_CLIENT_ID') or define('GOOGLE_CLIENT_ID', 'REPLACE_WITH_YOUR_CLIENT_ID');
+
+// Google OAuth Client Secret
+// Get from: https://console.cloud.google.com/apis/credentials
+defined('GOOGLE_CLIENT_SECRET') or define('GOOGLE_CLIENT_SECRET', 'REPLACE_WITH_YOUR_CLIENT_SECRET');
+
+// ==============================================================================
+// Database Configuration (Optional - defaults to SQLite)
+// ==============================================================================
+
+// SQLite (default - no configuration needed)
+// Data stored in: /var/www/app/data/db.sqlite
+
+// MySQL/MariaDB example (uncomment to use):
+// defined('DB_DRIVER') or define('DB_DRIVER', 'mysql');
+// defined('DB_USERNAME') or define('DB_USERNAME', 'kanboard');
+// defined('DB_PASSWORD') or define('DB_PASSWORD', 'your_password');
+// defined('DB_HOSTNAME') or define('DB_HOSTNAME', 'db');
+// defined('DB_NAME') or define('DB_NAME', 'kanboard');
+// defined('DB_PORT') or define('DB_PORT', 3306);
+
+// PostgreSQL example (uncomment to use):
+// defined('DB_DRIVER') or define('DB_DRIVER', 'postgres');
+// defined('DB_USERNAME') or define('DB_USERNAME', 'kanboard');
+// defined('DB_PASSWORD') or define('DB_PASSWORD', 'your_password');
+// defined('DB_HOSTNAME') or define('DB_HOSTNAME', 'db');
+// defined('DB_NAME') or define('DB_NAME', 'kanboard');
+// defined('DB_PORT') or define('DB_PORT', 5432);
+
+// ==============================================================================
+// Security Settings
+// ==============================================================================
+
+// Force HTTPS (enable after SSL certificate is configured)
+// defined('FORCE_HTTPS') or define('FORCE_HTTPS', true);
+
+// Enable HSTS header (only if using HTTPS)
+// Tells browsers to always use HTTPS for this domain
+// defined('ENABLE_HSTS') or define('ENABLE_HSTS', true);
+
+// Session timeout in seconds (0 = until browser closes)
+// defined('SESSION_DURATION') or define('SESSION_DURATION', 0);
+
+// Enable brute force protection
+defined('BRUTEFORCE_PROTECTION') or define('BRUTEFORCE_PROTECTION', true);
+
+// Disable local authentication (force OAuth only)
+// WARNING: Only enable this AFTER confirming OAuth works!
+// defined('DISABLE_LOGIN_FORM') or define('DISABLE_LOGIN_FORM', false);
+
+// ==============================================================================
+// Email Configuration (Optional)
+// ==============================================================================
+
+// SMTP settings for email notifications
+// defined('MAIL_TRANSPORT') or define('MAIL_TRANSPORT', 'smtp');
+// defined('MAIL_SMTP_HOSTNAME') or define('MAIL_SMTP_HOSTNAME', 'smtp.gmail.com');
+// defined('MAIL_SMTP_PORT') or define('MAIL_SMTP_PORT', 587);
+// defined('MAIL_SMTP_USERNAME') or define('MAIL_SMTP_USERNAME', 'your-email@gmail.com');
+// defined('MAIL_SMTP_PASSWORD') or define('MAIL_SMTP_PASSWORD', 'your-app-password');
+// defined('MAIL_SMTP_ENCRYPTION') or define('MAIL_SMTP_ENCRYPTION', 'tls');
+// defined('MAIL_FROM') or define('MAIL_FROM', 'kanboard@yourcompany.com');
+
+// ==============================================================================
+// Logging & Debug (Development Only)
+// ==============================================================================
+
+// Enable debug mode (DO NOT use in production - exposes sensitive info!)
+// defined('DEBUG') or define('DEBUG', false);
+
+// Log driver: stdout, stderr, syslog, file
+// defined('LOG_DRIVER') or define('LOG_DRIVER', 'stdout');
+
+// ==============================================================================
+// Localization & Regional Settings
+// ==============================================================================
+
+// Timezone (default: UTC)
+defined('TIMEZONE') or define('TIMEZONE', 'UTC');
+
+// Default language (options: en_US, fr_FR, es_ES, de_DE, etc.)
+// defined('DEFAULT_LANGUAGE') or define('DEFAULT_LANGUAGE', 'en_US');
+
+// Date format
+// defined('DATE_FORMAT') or define('DATE_FORMAT', 'm/d/Y');
+
+// ==============================================================================
+// File Upload Settings
+// ==============================================================================
+
+// Files directory (default: /var/www/app/data/files)
+// defined('FILES_DIR') or define('FILES_DIR', '/var/www/app/data/files');
+
+// Maximum file size in bytes (default: 10MB)
+// 10MB = 10485760 bytes
+// 50MB = 52428800 bytes
+// defined('FILE_MAX_SIZE') or define('FILE_MAX_SIZE', 10485760);
+
+// ==============================================================================
+// API Settings
+// ==============================================================================
+
+// Enable API authentication
+// defined('API_AUTHENTICATION') or define('API_AUTHENTICATION', true);
+
+// ==============================================================================
+// Additional OAuth Providers (Optional)
+// ==============================================================================
+
+// GitHub OAuth
+// defined('GITHUB_AUTH') or define('GITHUB_AUTH', false);
+// defined('GITHUB_CLIENT_ID') or define('GITHUB_CLIENT_ID', '');
+// defined('GITHUB_CLIENT_SECRET') or define('GITHUB_CLIENT_SECRET', '');
+
+// GitLab OAuth
+// defined('GITLAB_AUTH') or define('GITLAB_AUTH', false);
+// defined('GITLAB_CLIENT_ID') or define('GITLAB_CLIENT_ID', '');
+// defined('GITLAB_CLIENT_SECRET') or define('GITLAB_CLIENT_SECRET', '');
+
+// Microsoft OAuth
+// defined('MICROSOFT_AUTH') or define('MICROSOFT_AUTH', false);
+// defined('MICROSOFT_CLIENT_ID') or define('MICROSOFT_CLIENT_ID', '');
+// defined('MICROSOFT_CLIENT_SECRET') or define('MICROSOFT_CLIENT_SECRET', '');
+
+// ==============================================================================
+// Performance Settings (Advanced)
+// ==============================================================================
+
+// Enable cache
+// defined('CACHE_DRIVER') or define('CACHE_DRIVER', 'memory');
+
+// Session handler: db or php
+// defined('SESSION_HANDLER') or define('SESSION_HANDLER', 'db');
+
+// ==============================================================================
+// NOTES
+// ==============================================================================
+/*
+ * OAuth Callback URL Format:
+ *   If APPLICATION_URL = 'http://tasks.verslib.re'
+ *   Then Google OAuth redirect URI = 'http://tasks.verslib.re/oauth/google/callback'
+ *
+ * Common Issues:
+ *   1. redirect_uri_mismatch - APPLICATION_URL doesn't match Google OAuth settings
+ *   2. Make sure APPLICATION_URL has no trailing slash
+ *   3. Protocol must match exactly (http vs https)
+ *   4. After changes, restart container: docker restart kanboard
+ *
+ * Testing OAuth:
+ *   curl -I http://your-domain/oauth/google
+ *   Should see 302 redirect to accounts.google.com
+ *
+ * Documentation:
+ *   - Kanboard: https://docs.kanboard.org/
+ *   - Google OAuth: https://console.cloud.google.com/
+ */
