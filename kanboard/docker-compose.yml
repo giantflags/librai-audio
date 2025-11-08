@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  kanboard:
+    image: kanboard/kanboard:latest
+    container_name: kanboard
+    ports:
+      - "8080:80"
+    volumes:
+      - kanboard_data:/var/www/app/data
+      - kanboard_plugins:/var/www/app/plugins
+      - ./config.php:/var/www/app/config.php:ro
+    environment:
+      # Database (optional - uses SQLite by default)
+      # DATABASE_URL: "mysql://user:pass@db:3306/kanboard"
+
+      # Timezone
+      TZ: "UTC"
+    restart: unless-stopped
+    networks:
+      - kanboard_network
+
+  # Optional: Nginx reverse proxy (if running in same Docker network)
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: kanboard_nginx
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./ssl:/etc/nginx/ssl:ro
+  #   depends_on:
+  #     - kanboard
+  #   restart: unless-stopped
+  #   networks:
+  #     - kanboard_network
+
+volumes:
+  kanboard_data:
+  kanboard_plugins:
+
+networks:
+  kanboard_network:
+    driver: bridge
